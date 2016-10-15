@@ -13,12 +13,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import br.edu.ite.trabalho.model.enums.TipoRegistro;
 
@@ -42,10 +42,9 @@ public class Registro implements Serializable{
 	
 	@NotNull
 	@Column(nullable=false)
-	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date data;
 	
-	@NotNull
 	@Column(length=10, nullable=false)
 	@Enumerated(EnumType.STRING)
 	private TipoRegistro tipo;

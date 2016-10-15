@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js">
+    <meta charset="UTF-8">
+    <title>Registro</title>
+</head>
+<body class="container">
+    {% if mensagem %}
+      <div class="alert alert-{{ mensagem_tipo }} alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        {{ mensagem }}
+      </div>
+    {% endif %}
+    <form class="form-horizontal" method="post">
+      	<h2 class="form-signin-heading">Registro</h2>
+      	{% for campo in form %}
+          {% if campo.name != 'csrf_token' %}
+        	<div class="form-group">
+            {{ campo.label }}
+            {{ campo(class_='form-control') }}
+        	</div>
+
+            {% if campo.errors %}
+              <ul class=errors>
+              {% for error in campo.errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+              </ul>
+            {% endif %}
+
+          {% else %}
+            {{ campo }}
+          {% endif %}
+      	{% endfor %}
+	  	<button type="submit" class="btn btn-lg btn-primary btn-block">Consultar</button>
+
+      </form>
+
+</body>
+</html>
