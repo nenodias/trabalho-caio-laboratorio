@@ -1,19 +1,16 @@
 package br.edu.ite.trabalho.model.enums;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import br.edu.ite.trabalho.model.enums.serializer.TipoRegistroDeserializer;
 import br.edu.ite.trabalho.model.enums.serializer.TipoRegistroSerializer;
 
-@JsonFormat(shape = JsonFormat.Shape.STRING)
-@JsonSerialize(using = TipoRegistroSerializer.class)
-@JsonDeserialize(using = TipoRegistroDeserializer.class)
+@JsonSerialize(using=TipoRegistroSerializer.class)
+@JsonDeserialize(using=TipoRegistroDeserializer.class)
 public enum TipoRegistro {
 	
-	ENTRADA("ENTRADA", "Entrada"),
+	ENTRADA("ENTRADA", "Entrada"),	
 	SAIDA("SAIDA", "Saída");
 	
 	private String codigo;
@@ -24,7 +21,6 @@ public enum TipoRegistro {
 		this.descricao = descricao;
 	}
 
-	@JsonValue
 	public String getCodigo() {
 		return codigo;
 	}
@@ -39,6 +35,15 @@ public enum TipoRegistro {
 
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
+	}
+	
+	public static TipoRegistro buscarPorCodigo(String codigo){
+		for(TipoRegistro tipo: TipoRegistro.values()){
+			if(tipo.getCodigo().equals(codigo)){
+				return tipo;
+			}
+		}
+		return null;
 	}
 	
 }

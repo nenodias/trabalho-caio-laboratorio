@@ -13,14 +13,21 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import br.edu.ite.trabalho.model.enums.TipoRegistro;
+import br.edu.ite.trabalho.model.enums.serializer.CustomDateDeserializer;
+import br.edu.ite.trabalho.model.enums.serializer.CustomDateSerializer;
 
 @Entity
 @Table(name="registros")
@@ -32,17 +39,20 @@ public class Registro implements Serializable{
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name="id_carro",nullable = false)
 	private Carro carro;
 	
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name="id_cliente",nullable = false)
 	private Cliente cliente;
 	
-	@NotNull
 	@Column(nullable=false)
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+	@Temporal(TemporalType.TIMESTAMP)
+	@JsonSerialize(using=CustomDateSerializer.class)
+	@JsonDeserialize(using=CustomDateDeserializer.class)
 	private Date data;
 	
 	@Column(length=10, nullable=false)
@@ -87,6 +97,38 @@ public class Registro implements Serializable{
 
 	public void setTipo(TipoRegistro tipo) {
 		this.tipo = tipo;
+	}
+	
+	@JsonGetter
+	public Long getIdCliente(){
+		if(cliente != null){
+			return cliente.getId();
+		}
+		return null;
+	}
+	
+	@JsonSetter
+	public void setIdCliente(Long id){
+		if(cliente == null){
+			cliente = new Cliente();
+		}
+		cliente.setId(id);
+	}
+	
+	@JsonGetter
+	public Long getIdCarro(){
+		if(carro != null){
+			return carro.getId();
+		}
+		return null;
+	}
+	
+	@JsonSetter
+	public void setIdCarro(Long id){
+		if(carro == null){
+			carro = new Carro();
+		}
+		carro.setId(id);
 	}
 
 	@Override

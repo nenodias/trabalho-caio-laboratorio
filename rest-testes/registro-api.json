@@ -1,0 +1,1 @@
+{"url": "http://admin:admin123@localhost:8000/registro", "headers": {"accept": "application/json; charset=utf-8", "content-type": "application/json; charset=utf-8"}, "method": "POST", "data": "{\n\t\"tipo\": \"ENTRADA\",\n\t\"data\": \"2016-10-15 03:53:50\",\n\t\"idCliente\":1,\n\t\"carro\":2\n}\n"}
