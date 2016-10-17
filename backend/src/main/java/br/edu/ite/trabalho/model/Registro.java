@@ -19,15 +19,12 @@ import javax.persistence.TemporalType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSetter;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import br.edu.ite.trabalho.model.enums.TipoRegistro;
-import br.edu.ite.trabalho.model.enums.serializer.CustomDateDeserializer;
-import br.edu.ite.trabalho.model.enums.serializer.CustomDateSerializer;
 
 @Entity
 @Table(name="registros")
@@ -51,8 +48,7 @@ public class Registro implements Serializable{
 	
 	@Column(nullable=false)
 	@Temporal(TemporalType.TIMESTAMP)
-	@JsonSerialize(using=CustomDateSerializer.class)
-	@JsonDeserialize(using=CustomDateDeserializer.class)
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date data;
 	
 	@Column(length=10, nullable=false)

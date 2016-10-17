@@ -10,22 +10,24 @@
 			<property name="hibernate.hbm2ddl.auto" value="update"/>
 			<property name="hibernate.show_sql" value="true"/>
 			
-			<!-- Conexão de exemplo Firebird 
-			<property name="hibernate.dialect" value="org.hibernate.dialect.FirebirdDialect"/>
-			<property name="javax.persistence.jdbc.driver" value="org.firebirdsql.jdbc.FBDriver"/>
-			<property name="javax.persistence.jdbc.user" value="sysdba"/>
-			<property name="javax.persistence.jdbc.password" value="masterkey"/>
-			<property name="javax.persistence.jdbc.url" value="jdbc:firebirdsql:192.168.0.4:E:/U/Lucas/atend_teste/ATEND_TESTE.FDB?encoding=ISO8859_1"/>
-			-->
+			<!-- Conexão de exemplo Firebird -->
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect" />
+			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
+			<property name="javax.persistence.jdbc.user" value="root" />
+			<property name="javax.persistence.jdbc.password" value="" />
+			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3307/backend" />
+			
+			<!-- 
 			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
 			<property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
 			<property name="javax.persistence.jdbc.user" value="postgres"/>
 			<property name="javax.persistence.jdbc.password" value="postgres"/>
 			<property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/locadora"/>
-			<!-- 
+			
        		<property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
 			<property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
 			<property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:test;DB_CLOSE_DELAY=-1"/>
+
 			 -->
 		</properties>
 	</persistence-unit>
