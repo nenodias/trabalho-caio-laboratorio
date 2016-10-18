@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from pdb import set_trace
 import json
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField
@@ -24,27 +24,68 @@ def criar_carro(form):
         'cor': form.cor.data,
     }
 
-@carro_blueprint.route('/form', methods = ['post', 'get'])
-def form():
-    #set_trace()
-    form = CarroForm()
-    contexto = {}
-    contexto['form'] = form
-    try:
-        if form.validate_on_submit():
-            dados = criar_carro(form)
-            res = req.post(
-                api['host_api']+'/carro',
-                data=json.dumps(dados,encoding='utf-8'),
+
+def salvar(endpoint, dados):
+    res = req.post(
+        api['host_api']+endpoint,
+        data=json.dumps(dados,encoding='utf-8'),
+        auth=(api['auth_api']),
+        headers=api['headers_api']
+        )
+    return res.status_code == 200 or res.status_code == 201
+
+def atualizar(endpoint, dados):
+    res = req.put(
+        api['host_api']+endpoint,
+        data=json.dumps(dados,encoding='utf-8'),
+        auth=(api['auth_api']),
+        headers=api['headers_api']
+        )
+    return res.status_code == 200 or res.status_code == 201
+
+def buscar(endpoint):
+    res = req.get(
+                api['host_api']+endpoint,
                 auth=(api['auth_api']),
                 headers=api['headers_api']
                 )
-            if res.status_code == 200 or res.status_code == 201:
+    dados = None
+    if res.status_code != 404:
+        retorno = res.json()
+        conjunto_campos = set([u'placa', u'marca', u'modelo', u'ano',u'cor'])
+        dados = {chave.encode('ascii','ignore'):valor for chave,valor in retorno.iteritems() if chave in conjunto_campos }
+    return dados
+
+
+
+@carro_blueprint.route('/form/', defaults={'pk':None}, methods = ['post', 'get'])
+@carro_blueprint.route('/form/<pk>', methods = ['post', 'get'])
+def form(pk):
+    #set_trace()
+    form = CarroForm()
+    contexto = {}
+    try:
+        endpoint = '/carro/'
+        if pk:
+            endpoint += pk
+        if form.validate_on_submit():
+            dados = criar_carro(form)
+            operacao = False
+            if pk and pk in endpoint:
+                operacao = atualizar(endpoint, dados)
+            else:
+                operacao = salvar(endpoint, dados)
+            if operacao:
                 contexto['mensagem_tipo'] = 'success'
                 contexto['mensagem'] = u'Carro Cadastrado com sucesso'
             else:
                 contexto['mensagem_tipo'] = 'danger'
                 contexto['mensagem'] = res.text
+        elif pk:
+            dados = buscar(endpoint)
+            if dados:
+                form = CarroForm(**dados)
     except Exception as ex:
         mensagem = str(ex)
+    contexto['form'] = form
     return render_template('carro/form.html', **contexto), 200
