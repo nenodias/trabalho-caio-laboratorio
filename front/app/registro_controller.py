@@ -10,11 +10,14 @@ from app import app, request, redirect, flash, url_for, render_template, Bluepri
 
 registro_blueprint = Blueprint('registro', __name__, template_folder='templates')
 
+TIPO_ENTRADA = (u'ENTRADA',u'Entrada')
+TIPO_SAIDA = (u'SAIDA',u'Saída')
+
 class RegistroForm(FlaskForm):
     carro = IntegerField('Carro', validators=[DataRequired()])
     cliente = IntegerField('Cliente', validators=[DataRequired()])
     data = DateField('Data', validators=[DataRequired()])
-    tipo = SelectField('Tipo Registro', validators=[DataRequired()],choices=[('ENTRADA','Entrada'),('SAIDA',u'Saída')])
+    tipo = SelectField('Tipo Registro',coerce=str, validators=[DataRequired()],choices=[TIPO_ENTRADA,TIPO_SAIDA])
     
 
     def criar_registro(self):
@@ -29,7 +32,7 @@ def retornar_registro(dados):
     return {
         'carro':dados['idCarro'],
         'cliente':dados['idCliente'],
-        'data':dados['data'],
+        'data':datetime.strptime(dados['data'], '%Y-%m-%d %H:%M:%S'),
         'tipo':dados['tipo'],
     }
 
@@ -63,9 +66,14 @@ def form(pk):
             '''Editar'''
             retorno = Api.buscar(endpoint)
             if retorno:
+                set_trace()
                 dados = retornar_registro(retorno.dados)
-                form = RegistroForm(**dados)
+                form = RegistroForm()
+                form.carro.data = dados['carro']
+                form.cliente.data = dados['carro']
+                form.data.data = dados['data']
+                form.tipo.data = dados['tipo']
     except Exception as ex:
-        mensagem = str(ex)
+        flash(str(ex), 'info')
     contexto['form'] = form
     return render_template('registro/form.html', **contexto), 200

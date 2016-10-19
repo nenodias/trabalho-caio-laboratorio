@@ -77,6 +77,6 @@ def form(pk):
                 dados = retornar_cliente(retorno.dados)
                 form = ClienteForm(**dados)
     except Exception as ex:
-        mensagem = str(ex)
+        flash(str(ex), 'info')
     contexto['form'] = form
     return render_template('cliente/form.html', **contexto), 200
