@@ -6,7 +6,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, SelectField
 from wtforms.fields.html5 import DateField
 from wtforms.validators import DataRequired, Email, NumberRange, Length
-from app import app, request, redirect, render_template, Blueprint, req, api
+from app import app, request, redirect, flash, url_for, render_template, Blueprint, Api
 
 registro_blueprint = Blueprint('registro', __name__, template_folder='templates')
 
@@ -17,40 +17,55 @@ class RegistroForm(FlaskForm):
     tipo = SelectField('Tipo Registro', validators=[DataRequired()],choices=[('ENTRADA','Entrada'),('SAIDA',u'Saída')])
     
 
-def criar_registro(form):
+    def criar_registro(self):
+        return {
+            'idCarro': self.carro.data,
+            'idCliente': self.cliente.data,
+            'data': datetime.strftime(self.data.data, '%Y-%m-%d %H:%M:%S'),
+            'tipo': self.tipo.data,
+        }
+
+def retornar_registro(dados):
     return {
-        'carro': {
-            'id':form.carro.data
-        },
-        'cliente': {
-            'id':form.cliente.data
-        },
-        'data': datetime.strftime(form.data.data, '%Y-%m-%d %H:%M:%S'),
-        'tipo': form.tipo.data,
+        'carro':dados['idCarro'],
+        'cliente':dados['idCliente'],
+        'data':dados['data'],
+        'tipo':dados['tipo'],
     }
 
-@registro_blueprint.route('/form', methods = ['post', 'get'])
-def form():
+@registro_blueprint.route('/form/', defaults={'pk':None}, methods = ['post', 'get'])
+@registro_blueprint.route('/form/<pk>', methods = ['post', 'get'])
+def form(pk):
     #set_trace()
     form = RegistroForm()
     contexto = {}
-    contexto['form'] = form
     try:
-        set_trace()
+        endpoint = '/registro/'
+        retorno = False
+        if pk:
+            endpoint += pk
         if form.validate_on_submit():
-            dados = criar_registro(form)
-            res = req.post(
-                api['host_api']+'/registro',
-                data=json.dumps(dados,encoding='utf-8'),
-                auth=(api['auth_api']),
-                headers=api['headers_api']
-                )
-            if res.status_code == 200 or res.status_code == 201:
-                contexto['mensagem_tipo'] = 'success'
-                contexto['mensagem'] = u'Registro Cadastrado com sucesso'
+            dados = form.criar_registro()
+            if pk and pk in endpoint:
+                '''Atualizando'''
+                retorno = Api.atualizar(endpoint, dados)
+                flash(u'Registro com código %s foi salvo com sucesso'%(retorno.pk), 'success')
             else:
-                contexto['mensagem_tipo'] = 'danger'
-                contexto['mensagem'] = res.text
+                '''Salvando'''
+                retorno = Api.salvar(endpoint, dados)
+                flash(u'Registro com código %s foi atualizado com sucesso'%(retorno.pk), 'success')
+            if retorno:
+                return redirect(url_for('registro.form', pk=retorno.pk))
+            else:
+                '''Erro'''
+                flash(retorno.text, 'danger')
+        elif pk:
+            '''Editar'''
+            retorno = Api.buscar(endpoint)
+            if retorno:
+                dados = retornar_registro(retorno.dados)
+                form = RegistroForm(**dados)
     except Exception as ex:
         mensagem = str(ex)
+    contexto['form'] = form
     return render_template('registro/form.html', **contexto), 200

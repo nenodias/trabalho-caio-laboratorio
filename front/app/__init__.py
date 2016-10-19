@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import requests as req
-from flask import Flask, request, render_template, Blueprint, redirect
+from flask import Flask, request, render_template, Blueprint, redirect, flash, url_for
 
 app = Flask(__name__)
 
@@ -12,4 +12,5 @@ api = {
     'auth_api': ('admin', 'admin123')
 }
 
+from rest import Api
 from app import controller
