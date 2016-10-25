@@ -62,4 +62,4 @@ def form(pk):
     except Exception as ex:
         flash(str(ex), 'info')
     contexto['form'] = form
-    return render_template('carro/form.html', **contexto), 200
+    return render_template('form.html', **contexto), 200
