@@ -80,3 +80,17 @@ def form(pk):
         flash(str(ex), 'info')
     contexto['form'] = form
     return render_template('cliente/form.html', **contexto), 200
+
+@cliente_blueprint.route('/', methods = ['post', 'get'])
+def index():
+    contexto = {}
+    endpoint = '/cliente/'
+    size = int(request.args.get('size','10'))
+    page = int(request.args.get('page','0'))
+    retorno = Api.listar(endpoint, page, size)
+    contexto['size'] = size
+    contexto['page'] = page
+    contexto['endpoint'] = endpoint
+    contexto['dados'] = retorno.dados
+    contexto['pagination'] = retorno.pagination
+    return render_template('cliente/index.html', **contexto), 200

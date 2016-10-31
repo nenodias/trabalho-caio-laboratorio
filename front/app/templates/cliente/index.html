@@ -1,15 +1,15 @@
 {% extends 'layout.html' %}
-{% block title %}Listagem de Carros{% endblock %}
+{% block title %}Listagem de Clientes{% endblock %}
 {% block content %}
-  <h2>Listagem de Carros</h2>
+  <h2>Listagem de Clientes</h2>
   <table class="table table-hover">
     <thead>
       <tr>
-        <th>Placa</th>
-        <th>Marca</th>
-        <th>Modelo</th>
-        <th>Ano</th>
-        <th>Cor</th>
+        <th>Nome</th>
+        <th>E-mail</th>
+        <th>Telefone</th>
+        <th>Rg</th>
+        <th>Cidade</th>
         <th></th>
       </tr>
     </thead>
@@ -17,11 +17,11 @@
       {% if dados %}
         {% for dado in dados %}
           <tr>
-            <td>{{ dado['placa'] }}</td>
-            <td>{{ dado['marca'] }}</td>
-            <td>{{ dado['modelo'] }}</td>
-            <td>{{ dado['ano'] }}</td>
-            <td>{{ dado['cor'] }}</td>
+            <td>{{ dado['nome'] }}</td>
+            <td>{{ dado['email'] }}</td>
+            <td>{{ dado['telefone'] }}</td>
+            <td>{{ dado['rg'] }}</td>
+            <td>{{ dado['endereco']['cidade'] }}</td>
             <td>
               <a class="btn btn-warning" href="{{ endpoint }}form/{{ dado['id'] }}">Editar</a>
               <a class="btn btn-danger" href="{{ endpoint }}delete/{{ dado['id'] }}">Excluir</a>

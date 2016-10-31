@@ -60,12 +60,11 @@ class API:
         return RetornoAPI(operacao, res)
 
     def listar(self, endpoint, page=0, size=10):
-        data = json.dumps({'page':page,'size':size})
+        final_url = api['host_api']+endpoint+'?page='+str(page)+'&size='+str(size)
         res = req.get(
-                    api['host_api']+endpoint,
+                    final_url,
                     auth=(api['auth_api']),
-                    headers=api['headers_api'],
-                    data=data
+                    headers=api['headers_api']
                     )
         dados = None
         key = endpoint.split('/')[1]
