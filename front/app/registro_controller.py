@@ -8,7 +8,7 @@ from wtforms.fields.html5 import DateField
 from wtforms.validators import DataRequired, Email, NumberRange, Length
 from app import app, request, redirect, flash, url_for, render_template, Blueprint, Api
 
-registro_blueprint = Blueprint('registro', __name__, template_folder='templates/registro')
+registro_blueprint = Blueprint('registro', __name__)
 
 TIPO_ENTRADA = (u'ENTRADA',u'Entrada')
 TIPO_SAIDA = (u'SAIDA',u'Saída')
@@ -76,4 +76,4 @@ def form(pk):
     except Exception as ex:
         flash(str(ex), 'info')
     contexto['form'] = form
-    return render_template('form.html', **contexto), 200
+    return render_template('registro/form.html', **contexto), 200

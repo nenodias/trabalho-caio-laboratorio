@@ -6,7 +6,7 @@ from wtforms import StringField, IntegerField
 from wtforms.validators import DataRequired, Email, NumberRange, Length
 from app import app, request, redirect, flash, url_for, render_template, Blueprint, Api
 
-cliente_blueprint = Blueprint('cliente', __name__, template_folder='templates/cliente')
+cliente_blueprint = Blueprint('cliente', __name__)
 
 class ClienteForm(FlaskForm):
     nome = StringField('Nome', validators=[DataRequired()])
@@ -79,4 +79,4 @@ def form(pk):
     except Exception as ex:
         flash(str(ex), 'info')
     contexto['form'] = form
-    return render_template('form.html', **contexto), 200
+    return render_template('cliente/form.html', **contexto), 200

@@ -6,7 +6,7 @@ from wtforms import StringField, IntegerField
 from wtforms.validators import DataRequired, Email, NumberRange, Length
 from app import app, request, redirect, flash, url_for, render_template, Blueprint, Api
 
-carro_blueprint = Blueprint('carro', __name__, template_folder='templates/carro')
+carro_blueprint = Blueprint('carro', __name__)
 
 class CarroForm(FlaskForm):
     placa = StringField('Placa', validators=[DataRequired(), Length(min=8, max=10)])
@@ -48,7 +48,7 @@ def form(pk):
                 retorno = Api.salvar(endpoint, dados)
                 flash(u'Carro com código %s foi atualizado com sucesso'%(retorno.pk), 'success')
             if retorno:
-                return redirect(url_for('carro.form', pk=retorno.pk))
+                return redirect(url_for('carro/carro.form', pk=retorno.pk))
             else:
                 '''Erro'''
                 flash(retorno.text, 'danger')
@@ -62,4 +62,19 @@ def form(pk):
     except Exception as ex:
         flash(str(ex), 'info')
     contexto['form'] = form
-    return render_template('form.html', **contexto), 200
+    return render_template('carro/form.html', **contexto), 200
+
+
+@carro_blueprint.route('/', methods = ['post', 'get'])
+def index():
+    contexto = {}
+    endpoint = '/carro/'
+    size = request.form.get('size',10)
+    page = request.form.get('page',0)
+    retorno = Api.listar(endpoint, page, size)
+    contexto['size'] = size
+    contexto['page'] = page
+    contexto['endpoint'] = endpoint
+    contexto['dados'] = retorno.dados
+    contexto['pagination'] = retorno.pagination
+    return render_template('carro/index.html', **contexto), 200

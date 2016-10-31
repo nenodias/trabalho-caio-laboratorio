@@ -1,0 +1,52 @@
+{% extends 'layout.html' %}
+{% block title %}Listagem de Carros{% endblock %}
+{% block content %}
+  <h2>Listagem de Carros</h2>
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Placa</th>
+        <th>Marca</th>
+        <th>Modelo</th>
+        <th>Ano</th>
+        <th>Cor</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if dados %}
+        {% for dado in dados %}
+          <tr>
+            <td>{{ dado['placa'] }}</td>
+            <td>{{ dado['marca'] }}</td>
+            <td>{{ dado['modelo'] }}</td>
+            <td>{{ dado['ano'] }}</td>
+            <td>{{ dado['cor'] }}</td>
+            <td>
+              <a class="btn btn-warning" href="{{ endpoint }}form/{{ dado['id'] }}">Editar</a>
+            </td>
+          </tr>
+        {% endfor %}
+      {% else %}
+        <tr>
+          <td></td>
+        </tr>
+      {% endif %}
+    </tbody>
+  </table>
+
+  <nav aria-label="Page navigation">
+    <ul class="pagination">
+      <li>
+        <a href="{{ endpoint }}?page={{ page -1 }}&size={{ size }}#" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      <li>
+        <a href="{{ endpoint }}?page={{ page + 1 }}&size={{ size }}" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+{% endblock %}
