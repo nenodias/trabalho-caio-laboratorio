@@ -69,8 +69,8 @@ def form(pk):
 def index():
     contexto = {}
     endpoint = '/carro/'
-    size = request.form.get('size',10)
-    page = request.form.get('page',0)
+    size = int(request.args.get('size','10'))
+    page = int(request.args.get('page','0'))
     retorno = Api.listar(endpoint, page, size)
     contexto['size'] = size
     contexto['page'] = page
