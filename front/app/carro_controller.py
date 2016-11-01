@@ -78,3 +78,12 @@ def index():
     contexto['dados'] = retorno.dados
     contexto['pagination'] = retorno.pagination
     return render_template('carro/index.html', **contexto), 200
+
+@carro_blueprint.route('/delete/<pk>', methods = ['post'])
+def delete(pk):
+    contexto = {}
+    endpoint = '/carro/'
+    retorno = Api.deletar(endpoint, pk)
+    if retorno.operacao:
+        return '',200
+    return '', 404

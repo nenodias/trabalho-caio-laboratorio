@@ -59,7 +59,7 @@ class API:
         operacao = res.status_code != 404
         return RetornoAPI(operacao, res)
 
-    def listar(self, endpoint, page=0, size=10):
+    def listar(self, endpoint, page=0, size=10, callback=None):
         final_url = api['host_api']+endpoint+'?page='+str(page)+'&size='+str(size)
         res = req.get(
                     final_url,
@@ -75,7 +75,20 @@ class API:
             retorno.dados = []
             for dados in retorno.response.json()[u'_embedded'][key]:
                 dados['id'] = retorno._get_pk(dados)
+                if callback:
+                    aux = {'req':req, 'auth':api['auth_api'], 'headers': api['headers_api'] }
+                    dados = callback(dados, aux )
                 retorno.dados.append( dados )
         return retorno
 
+    def deletar(self, endpoint, pk):
+        final_url = api['host_api']+endpoint+str(pk)
+        res = req.delete(
+                    final_url,
+                    auth=(api['auth_api']),
+                    headers=api['headers_api']
+                    )
+        operacao = res.status_code != 404
+        retorno = RetornoAPI(operacao, res)
+        return retorno
 Api = API()

@@ -1,17 +1,16 @@
 {% extends 'layout.html' %}
-{% block title %}Listagem de Clientes{% endblock %}
+{% block title %}Listagem de Registros{% endblock %}
 {% block content %}
-  <h2>Listagem de Clientes</h2>
+  <h2>Listagem de Registros</h2>
   <div class="form-group">
     <a class="btn btn-success pull-right" href="{{endpoint}}form">Inserir</a>
     <table class="table table-hover">
       <thead>
         <tr>
-          <th>Nome</th>
-          <th>E-mail</th>
-          <th>Telefone</th>
-          <th>Rg</th>
-          <th>Cidade</th>
+          <th>Carro</th>
+          <th>Cliente</th>
+          <th>Data</th>
+          <th>Tipo</th>
           <th></th>
         </tr>
       </thead>
@@ -19,11 +18,12 @@
         {% if dados %}
           {% for dado in dados %}
             <tr>
-              <td>{{ dado['nome'] }}</td>
-              <td>{{ dado['email'] }}</td>
-              <td>{{ dado['telefone'] }}</td>
-              <td>{{ dado['rg'] }}</td>
-              <td>{{ dado['endereco']['cidade'] }}</td>
+              <td>
+              {{ dado['carro_instance']['placa'] }} -
+              {{ dado['carro_instance']['modelo'] }}</td>
+              <td>{{ dado['cliente_instance']['nome'] }}</td>
+              <td>{{ dado['data'] }}</td>
+              <td>{{ dado['tipo'] }}</td>
               <td>
                 <a class="btn btn-warning" href="{{ endpoint }}form/{{ dado['id'] }}">Editar</a>
                 <a class="btn btn-danger" href="#" data-target="{{ endpoint }}delete/{{ dado['id'] }}">Excluir</a>

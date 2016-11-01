@@ -2,52 +2,70 @@
 {% block title %}Listagem de Carros{% endblock %}
 {% block content %}
   <h2>Listagem de Carros</h2>
-  <table class="table table-hover">
-    <thead>
-      <tr>
-        <th>Placa</th>
-        <th>Marca</th>
-        <th>Modelo</th>
-        <th>Ano</th>
-        <th>Cor</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      {% if dados %}
-        {% for dado in dados %}
-          <tr>
-            <td>{{ dado['placa'] }}</td>
-            <td>{{ dado['marca'] }}</td>
-            <td>{{ dado['modelo'] }}</td>
-            <td>{{ dado['ano'] }}</td>
-            <td>{{ dado['cor'] }}</td>
-            <td>
-              <a class="btn btn-warning" href="{{ endpoint }}form/{{ dado['id'] }}">Editar</a>
-              <a class="btn btn-danger" href="{{ endpoint }}delete/{{ dado['id'] }}">Excluir</a>
-            </td>
-          </tr>
-        {% endfor %}
-      {% else %}
+  <div class="form-group">
+    <a class="btn btn-success pull-right" href="{{endpoint}}form">Inserir</a>
+    <table class="table table-hover">
+      <thead>
         <tr>
-          <td></td>
+          <th>Placa</th>
+          <th>Marca</th>
+          <th>Modelo</th>
+          <th>Ano</th>
+          <th>Cor</th>
+          <th></th>
         </tr>
-      {% endif %}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {% if dados %}
+          {% for dado in dados %}
+            <tr>
+              <td>{{ dado['placa'] }}</td>
+              <td>{{ dado['marca'] }}</td>
+              <td>{{ dado['modelo'] }}</td>
+              <td>{{ dado['ano'] }}</td>
+              <td>{{ dado['cor'] }}</td>
+              <td>
+                <a class="btn btn-warning" href="{{ endpoint }}form/{{ dado['id'] }}">Editar</a>
+                <a class="btn btn-danger" href="#" data-target="{{ endpoint }}delete/{{ dado['id'] }}">Excluir</a>
+              </td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td></td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
 
-  <nav aria-label="Page navigation">
-    <ul class="pagination">
-      <li>
-        <a href="{{ endpoint }}?page={{ page -1 if page > 0 else 0 }}&size={{ size }}#" aria-label="Previous">
-          <span aria-hidden="true">&laquo;</span>
-        </a>
-      </li>
-      <li>
-        <a href="{{ endpoint }}?page={{ page +1 if page <= pagination['totalPages'] else pagination['totalPages'] }}&size={{ size }}" aria-label="Next">
-          <span aria-hidden="true">&raquo;</span>
-        </a>
-      </li>
-    </ul>
-  </nav>
+    <nav aria-label="Page navigation">
+      <ul class="pagination">
+        <li>
+          <a href="{{ endpoint }}?page={{ page -1 if page > 0 else 0 }}&size={{ size }}#" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        <li>
+          <a href="{{ endpoint }}?page={{ page +1 if page <= pagination['totalPages'] else pagination['totalPages'] }}&size={{ size }}" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+  <script type="text/javascript">
+    $('.btn-danger').click(function(){
+      var btn = $(this);
+      bootbox.confirm("Deseja excluir esse registro?", function(result) {
+        if(result){
+          $.post(btn.data('target'),function(data){
+            bootbox.alert('Registro excluído com sucesso!');
+            window.location.reload();
+          }).fail(function(){
+            bootbox.alert('Erro ao excluir registro!');
+          });
+        }
+      });
+    });
+  </script>
 {% endblock %}
