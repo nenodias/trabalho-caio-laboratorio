@@ -24,5 +24,51 @@
       	{% endfor %}
 	  	<button type="submit" class="btn btn-lg btn-primary btn-block">Consultar</button>
 
-      </form>
+    </form>
+    <script type="text/javascript">
+      $("#carro").selectSearch({
+          findSearch:function(search, limit, offset){
+              return $.ajax({
+                url : "/carro/ajax",
+                dataType : "json",
+                data:'search='+search+'&limit='+limit+'&offset='+offset
+              });
+          },
+          findById:function(id){
+              return $.ajax({
+                url : "/carro/ajax/"+id,
+                dataType : "json"
+              });
+          },
+          getDescription: function(data){
+              return data.marca+'-'+data.modelo;
+          },
+          getValue: function(data){
+              return data.id;
+          },
+          hideField:true
+      });
+      $("#cliente").selectSearch({
+          findSearch:function(search, limit, offset){
+              return $.ajax({
+                url : "/cliente/ajax",
+                dataType : "json",
+                data:'search='+search+'&limit='+limit+'&offset='+offset
+              });
+          },
+          findById:function(id){
+              return $.ajax({
+                url : "/cliente/ajax/"+id,
+                dataType : "json"
+              });
+          },
+          getDescription: function(data){
+              return data.nome;
+          },
+          getValue: function(data){
+              return data.id;
+          },
+          hideField:true
+      });
+    </script>
 {% endblock %}

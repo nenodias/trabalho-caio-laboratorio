@@ -4,7 +4,7 @@ import json
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField
 from wtforms.validators import DataRequired, Email, NumberRange, Length
-from app import app, request, redirect, flash, url_for, render_template, Blueprint, Api
+from app import app, request, redirect, flash, url_for, render_template, Blueprint, Api, jsonify
 
 carro_blueprint = Blueprint('carro', __name__)
 
@@ -87,3 +87,18 @@ def delete(pk):
     if retorno.operacao:
         return '',200
     return '', 404
+
+@carro_blueprint.route('/ajax', methods = ['get'])
+def ajax():
+    search = request.args.get('search', '')
+    limit = request.args.get('limit','10')
+    offset = request.args.get('offset','0')
+    param = '?modelo='+search+'&marca='+search+'&size='+limit+'&page='+offset
+    url = '/carro/search/findByModeloContainsIgnoreCaseOrMarcaContainsIgnoreCase'
+    retorno = Api.listar(url,param=param)
+    return jsonify(retorno.dados )
+
+@carro_blueprint.route('/ajax/<pk>', methods = ['get'])
+def ajax_by_id(pk):
+    endpoint = '/carro/'+pk
+    return jsonify(Api.buscar(endpoint).dados )

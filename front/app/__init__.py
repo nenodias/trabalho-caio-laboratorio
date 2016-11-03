@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import requests as req
-from flask import Flask, request, render_template, Blueprint, redirect, flash, url_for
+from flask import Flask, request, render_template, Blueprint, redirect, flash, url_for, jsonify
 
 app = Flask(__name__)
 

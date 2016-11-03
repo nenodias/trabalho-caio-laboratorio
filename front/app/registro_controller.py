@@ -66,7 +66,6 @@ def form(pk):
             '''Editar'''
             retorno = Api.buscar(endpoint)
             if retorno:
-                set_trace()
                 dados = retornar_registro(retorno.dados)
                 form = RegistroForm()
                 form.carro.data = dados['carro']

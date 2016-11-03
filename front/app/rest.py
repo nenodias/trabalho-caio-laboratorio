@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from pdb import set_trace
 import json
 from app import req, api
 
@@ -57,10 +58,15 @@ class API:
                     )
         dados = None
         operacao = res.status_code != 404
-        return RetornoAPI(operacao, res)
+        retorno = RetornoAPI(operacao, res)
+        if retorno.operacao:
+            retorno.dados['id'] = retorno._get_pk(retorno.dados)
+        return retorno
 
-    def listar(self, endpoint, page=0, size=10, callback=None):
-        final_url = api['host_api']+endpoint+'?page='+str(page)+'&size='+str(size)
+    def listar(self, endpoint, page=0, size=10, callback=None, param=''):
+        if not param:
+            param = '?page='+str(page)+'&size='+str(size)
+        final_url = api['host_api']+endpoint+param
         res = req.get(
                     final_url,
                     auth=(api['auth_api']),
