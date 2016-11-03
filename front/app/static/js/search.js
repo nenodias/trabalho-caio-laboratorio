@@ -61,6 +61,15 @@
                 item.setAttribute('data-value', value);
                 return item;
             },
+            loadByPk:function(){
+                if(valueField.value !== ""){
+                    config.findById(valueField.value).done(function(data, textStatus, jqXHR){
+                        var item = elemento.createItem(data);
+                        elemento.selectItem(item);
+                    }).fail(function(jqXHR, textStatus, errorThrown){
+                    });
+                }
+            },
             loadData: function(itemsList, search, limit, offset){
                 config.findSearch(search, limit, offset).done(function(data, textStatus, jqXHR){
                     if(data.length > 0){
@@ -145,13 +154,7 @@
                 }
             }
         });
-        if(valueField.value !== ""){
-            config.findById(valueField.value).done(function(data, textStatus, jqXHR){
-                var item = elemento.createItem(data);
-                elemento.selectItem(item);
-            }).fail(function(jqXHR, textStatus, errorThrown){
-            });
-        }
+        elemento.loadByPk();
         var eventoKey = function(e){
             if(e.keyCode === 13){
                 e.preventDefault();
@@ -177,6 +180,11 @@
         });
         if(config.hideField){
             $(valueField).hide();
+        }
+        if(config.onChangeValueLoad){
+            valueField.addEventListener('change', function(){
+                elemento.loadByPk();
+            });
         }
         return this;
    }; 
