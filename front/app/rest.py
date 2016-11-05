@@ -31,31 +31,34 @@ class RetornoAPI:
 class API:
 
     def salvar(self, endpoint, dados):
-        res = req.post(
-            api['host_api']+endpoint,
-            data=json.dumps(dados,encoding='utf-8'),
-            auth=(api['auth_api']),
-            headers=api['headers_api']
-            )
+        contexto = {
+            'data':json.dumps(dados,encoding='utf-8'),
+            'auth':api['auth_api'],
+            'headers':api['headers_api']
+        }
+        url = api['host_api']+endpoint
+        res = req.post( url, **contexto)
         operacao = res.status_code == 200 or res.status_code == 201
         return RetornoAPI(operacao, res)
 
     def atualizar(self, endpoint, dados):
-        res = req.put(
-            api['host_api']+endpoint,
-            data=json.dumps(dados,encoding='utf-8'),
-            auth=(api['auth_api']),
-            headers=api['headers_api']
-            )
+        contexto = {
+            'data':json.dumps(dados,encoding='utf-8'),
+            'auth':api['auth_api'],
+            'headers':api['headers_api']
+        }
+        url = api['host_api']+endpoint
+        res = req.put( url, **contexto)
         operacao = res.status_code == 200 or res.status_code == 201
         return RetornoAPI(operacao, res)
 
     def buscar(self, endpoint):
-        res = req.get(
-                    api['host_api']+endpoint,
-                    auth=(api['auth_api']),
-                    headers=api['headers_api']
-                    )
+        contexto = {
+            'auth':api['auth_api'],
+            'headers':api['headers_api']
+        }
+        url = api['host_api']+endpoint
+        res = req.get(url, **contexto)
         dados = None
         operacao = res.status_code != 404
         retorno = RetornoAPI(operacao, res)
@@ -66,16 +69,20 @@ class API:
     def listar(self, endpoint, page=0, size=10, callback=None, param=''):
         if not param:
             param = '?page='+str(page)+'&size='+str(size)
+
+        contexto = {
+            'auth':api['auth_api'],
+            'headers':api['headers_api']
+        }
+
         final_url = api['host_api']+endpoint+param
-        res = req.get(
-                    final_url,
-                    auth=(api['auth_api']),
-                    headers=api['headers_api']
-                    )
+        res = req.get( final_url, **contexto)
+        
         dados = None
         key = endpoint.split('/')[1]
         operacao = res.status_code != 404
         retorno = RetornoAPI(operacao, res)
+
         if retorno.operacao:
             retorno.pagination = retorno.dados['page']
             retorno.dados = []
@@ -88,12 +95,12 @@ class API:
         return retorno
 
     def deletar(self, endpoint, pk):
+        contexto = {
+            'auth':api['auth_api'],
+            'headers':api['headers_api']
+        }
         final_url = api['host_api']+endpoint+str(pk)
-        res = req.delete(
-                    final_url,
-                    auth=(api['auth_api']),
-                    headers=api['headers_api']
-                    )
+        res = req.delete(final_url, **contexto)
         operacao = res.status_code != 404
         retorno = RetornoAPI(operacao, res)
         return retorno

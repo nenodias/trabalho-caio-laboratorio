@@ -9,7 +9,7 @@ requisicoes_okay = 0
 for i in range(100):
     dados = {
         "nome":"Jose %i"%(i),
-        "email":"josedasilva@gmail.com%i"%(i),
+        "email":"josedasilva%i@gmail.com"%(i),
         "rg": 123456789,
         "telefone":"+55 14 9 1234-5%03d"%(i),
         "endereco":{
@@ -20,7 +20,7 @@ for i in range(100):
         }
     }
 
-    resp = r.post('http://admin:admin123@localhost:8000/cliente/', headers=cabecalho, data=json.dumps(dados, encoding='utf-8') )
+    resp = r.post('http://admin:admin123@localhost:8000/cliente/', headers=cabecalho, data=json.dumps(dados) )
     okay = resp.status_code == 200 or resp.status_code == 201
     if okay:
         requisicoes_okay += 1
