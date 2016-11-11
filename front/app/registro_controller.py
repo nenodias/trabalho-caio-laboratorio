@@ -6,7 +6,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, SelectField
 from wtforms.fields.html5 import DateField
 from wtforms.validators import DataRequired, Email, NumberRange, Length
-from app import app, request, redirect, flash, url_for, render_template, Blueprint, Api
+from app import app, request, redirect, flash, url_for, render_template, Blueprint, Api, auth_require
 
 registro_blueprint = Blueprint('registro', __name__)
 
@@ -38,6 +38,7 @@ def retornar_registro(dados):
 
 @registro_blueprint.route('/form/', defaults={'pk':None}, methods = ['post', 'get'])
 @registro_blueprint.route('/form/<pk>', methods = ['post', 'get'])
+@auth_require()
 def form(pk):
     #set_trace()
     form = RegistroForm()
@@ -96,6 +97,7 @@ def load_relacoes(dados, aux):
     return dados
 
 @registro_blueprint.route('/', methods = ['post', 'get'])
+@auth_require()
 def index():
     contexto = {}
     endpoint = '/registro/'
@@ -110,6 +112,7 @@ def index():
     return render_template('registro/index.html', **contexto), 200
 
 @registro_blueprint.route('/delete/<pk>', methods = ['post'])
+@auth_require()
 def delete(pk):
     contexto = {}
     endpoint = '/registro/'

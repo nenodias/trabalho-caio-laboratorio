@@ -4,7 +4,7 @@ import json
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField
 from wtforms.validators import DataRequired, Email, NumberRange, Length
-from app import app, request, redirect, flash, url_for, render_template, Blueprint, Api, jsonify
+from app import app, request, redirect, flash, url_for, render_template, Blueprint, Api, jsonify, auth_require
 
 carro_blueprint = Blueprint('carro', __name__)
 
@@ -28,6 +28,7 @@ class CarroForm(FlaskForm):
 
 @carro_blueprint.route('/form/', defaults={'pk':None}, methods = ['post', 'get'])
 @carro_blueprint.route('/form/<pk>', methods = ['post', 'get'])
+@auth_require()
 def form(pk):
     #set_trace()
     form = CarroForm()
@@ -66,6 +67,7 @@ def form(pk):
 
 
 @carro_blueprint.route('/', methods = ['post', 'get'])
+@auth_require()
 def index():
     contexto = {}
     endpoint = '/carro/'
@@ -80,6 +82,7 @@ def index():
     return render_template('carro/index.html', **contexto), 200
 
 @carro_blueprint.route('/delete/<pk>', methods = ['post'])
+@auth_require()
 def delete(pk):
     contexto = {}
     endpoint = '/carro/'
@@ -89,6 +92,7 @@ def delete(pk):
     return '', 404
 
 @carro_blueprint.route('/ajax', methods = ['get'])
+@auth_require()
 def ajax():
     search = request.args.get('search', '')
     limit = request.args.get('limit','10')
@@ -99,6 +103,7 @@ def ajax():
     return jsonify(retorno.dados )
 
 @carro_blueprint.route('/ajax/<pk>', methods = ['get'])
+@auth_require()
 def ajax_by_id(pk):
     endpoint = '/carro/'+pk
     return jsonify(Api.buscar(endpoint).dados )

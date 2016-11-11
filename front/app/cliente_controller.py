@@ -4,7 +4,7 @@ from pdb import set_trace
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField
 from wtforms.validators import DataRequired, Email, NumberRange, Length
-from app import app, request, redirect, flash, url_for, render_template, Blueprint, Api, jsonify
+from app import app, request, redirect, flash, url_for, render_template, Blueprint, Api, jsonify, auth_require
 
 cliente_blueprint = Blueprint('cliente', __name__)
 
@@ -46,6 +46,7 @@ def retornar_cliente(dados):
 
 @cliente_blueprint.route('/form/', defaults={'pk':None}, methods = ['post', 'get'])
 @cliente_blueprint.route('/form/<pk>', methods = ['post', 'get'])
+@auth_require()
 def form(pk):
     #set_trace()
     form = ClienteForm()
@@ -82,6 +83,7 @@ def form(pk):
     return render_template('cliente/form.html', **contexto), 200
 
 @cliente_blueprint.route('/', methods = ['post', 'get'])
+@auth_require()
 def index():
     contexto = {}
     endpoint = '/cliente/'
@@ -96,6 +98,7 @@ def index():
     return render_template('cliente/index.html', **contexto), 200
 
 @cliente_blueprint.route('/delete/<pk>', methods = ['post'])
+@auth_require()
 def delete(pk):
     contexto = {}
     endpoint = '/cliente/'
@@ -106,6 +109,7 @@ def delete(pk):
 
 
 @cliente_blueprint.route('/ajax', methods = ['get'])
+@auth_require()
 def ajax():
     search = request.args.get('search', '')
     limit = request.args.get('limit','10')
@@ -115,6 +119,7 @@ def ajax():
     return jsonify(Api.listar(url,param=param).dados )
 
 @cliente_blueprint.route('/ajax/<pk>', methods = ['get'])
+@auth_require()
 def ajax_by_id(pk):
     endpoint = '/cliente/'+pk
     return jsonify(Api.buscar(endpoint).dados )
