@@ -49,7 +49,7 @@ def form(pk):
                 retorno = Api.salvar(endpoint, dados)
                 flash(u'Carro com código %s foi atualizado com sucesso'%(retorno.pk), 'success')
             if retorno:
-                return redirect(url_for('carro/carro.form', pk=retorno.pk))
+                return redirect(url_for('carro.form', pk=retorno.pk))
             else:
                 '''Erro'''
                 flash(retorno.text, 'danger')
